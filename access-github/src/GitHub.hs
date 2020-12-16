@@ -1,5 +1,14 @@
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE DataKinds         #-}
+{-# LANGUAGE DeriveAnyClass    #-}
+{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE TypeOperators     #-}
+{-# LANGUAGE DuplicateRecordFields     #-}
+{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE OverloadedStrings    #-}
+{-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 module GitHub where
 
@@ -15,13 +24,17 @@ import Servant.Client
 type Username = Text
 type UserAgent = Text
 
+data GitHubUser =
+    GitHubUser { login :: Text
+             } deriving (Generic, FromJSON, Show)
+
 type GitHubAPI = "users" :> Header "user-agent" UserAgent 
-                         :> Capture "username" Username  :> Get '[JSON] Text
+                         :> Capture "username" Username  :> Get '[JSON] GitHubUser
             :<|> "test2" :> Get '[JSON] Text
 gitHubAPI :: Proxy GitHubAPI
 gitHubAPI = Proxy
 
-testEndpoint :: Maybe UserAgent -> Username -> ClientM Text
+testEndpoint :: Maybe UserAgent -> Username -> ClientM GitHubUser
 testEndpoint2 :: ClientM Text
 
 testEndpoint :<|> testEndpoint2 = client gitHubAPI
