@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 33126b21b8b29d7796f752f248fbc9f2ecb4d626364f45e8731275263d38009f
+-- hash: 53f90f00ca96621b60503a06679bdc651e6461aa0eac31dfe47188d902c1a476
 
 name:           access-github
 version:        0.1.0.0
@@ -27,6 +27,7 @@ source-repository head
 
 library
   exposed-modules:
+      GitHub
       Lib
   other-modules:
       Paths_access_github
