@@ -1,3 +1,6 @@
+{-# LANGUAGE DataKinds         #-}
+{-# LANGUAGE TypeOperators     #-}
+
 module GitHub where
 
 import Control.Monad (mzero)
@@ -8,5 +11,14 @@ import GHC.Generics
 import Network.HTTP.Client (defaultManagerSettings, newManager)
 import Servant.API
 import Servant.Client
-testFunc :: IO ()
-testFunc = putStrLn "someFunc"
+
+type GitHubAPI = "testEndpoint" :> Get '[JSON] Text
+            :<|> "testEndpoint2" :> Get '[JSON] Text
+
+gitHubAPI :: Proxy GitHubAPI
+gitHubAPI = Proxy
+
+testEndpoint :: ClientM Text
+testEndpoint2 :: ClientM Text
+
+testEndpoint :<|> testEndpoint2 = client gitHubAPI
