@@ -12,13 +12,16 @@ import Network.HTTP.Client (defaultManagerSettings, newManager)
 import Servant.API
 import Servant.Client
 
-type GitHubAPI = "testEndpoint" :> Get '[JSON] Text
-            :<|> "testEndpoint2" :> Get '[JSON] Text
+type Username = Text
+type UserAgent = Text
 
+type GitHubAPI = "users" :> Header "user-agent" UserAgent 
+                         :> Capture "username" Username  :> Get '[JSON] Text
+            :<|> "test2" :> Get '[JSON] Text
 gitHubAPI :: Proxy GitHubAPI
 gitHubAPI = Proxy
 
-testEndpoint :: ClientM Text
+testEndpoint :: Maybe UserAgent -> Username -> ClientM Text
 testEndpoint2 :: ClientM Text
 
 testEndpoint :<|> testEndpoint2 = client gitHubAPI
