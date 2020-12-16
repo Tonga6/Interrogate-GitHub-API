@@ -20,7 +20,16 @@ extra-source-files:
 description:         Please see the README on GitHub at <https://github.com/githubuser/access-github#readme>
 
 dependencies:
-- base >= 4.7 && < 5
+  - base >= 4.7 && < 5
+  - aeson
+  - text
+  - servant
+  - servant-client
+  - http-client
+  - http-client-tls
+  - utf8-string
+  - hashmap
+  - split
 
 library:
   source-dirs: src

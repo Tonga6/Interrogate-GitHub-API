@@ -5,4 +5,10 @@ module Lib
 import GitHub
 
 someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+someFunc = do
+    putStrLn "Executing sampleGitHubCall:"
+    sampleGitHubCall
+    putStrLn "end."
+
+sampleGitHubCall :: IO ()
+sampleGitHubCall  = do putStrLn "Placeholder for GitHubCall"
