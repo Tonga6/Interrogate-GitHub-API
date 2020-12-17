@@ -21,7 +21,7 @@ someFunc = do
 
 sampleGitHubCall :: IO ()
 sampleGitHubCall  = 
-  (SC.runClientM (GH.testEndpoint (Just "haskell-app") "esjmb") =<< env) >>= \case
+  (SC.runClientM (GH.testEndpoint (Just "haskell-app") "Tonga6") =<< env) >>= \case
 
     Left err -> do
       putStrLn $ "Error encountered: " ++ show err
