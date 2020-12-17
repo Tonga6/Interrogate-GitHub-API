@@ -14,19 +14,30 @@ import qualified Servant.Client as SC
 import Network.HTTP.Client (newManager)
 import Network.HTTP.Client.TLS (tlsManagerSettings)
 
+import Data.Text hiding (map,intercalate)
+import Data.List (intercalate)
 someFunc :: IO ()
 someFunc = do
-    putStrLn "Executing sampleGitHubCall:"
-    sampleGitHubCall
+    putStrLn "Executing getUserInfo:"
+    getUserInfo
+    putStrLn "Executing getRepoLanguage:"
+    -- getRepoLanguage
 
-sampleGitHubCall :: IO ()
-sampleGitHubCall  = 
-  (SC.runClientM (GH.testEndpoint (Just "haskell-app") "Tonga6") =<< env) >>= \case
+getUserInfo :: IO ()
+getUserInfo  = 
+  (SC.runClientM (GH.getUser (Just "haskell-app") "Tonga6") =<< env) >>= \case
 
     Left err -> do
       putStrLn $ "Error encountered: " ++ show err
     Right res -> do
       putStrLn $ "Returned val: " ++ show res
+
+      (SC.runClientM (GH.getRepoLanguage (Just "haskell-app") "Tonga6" "College") =<< env) >>= \case
+
+        Left err -> do
+          putStrLn $ "Error encountered: " ++ show err
+        Right res -> do
+          putStrLn $ "Returned val: " ++ show res
 
 
   where env :: IO SC.ClientEnv

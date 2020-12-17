@@ -22,21 +22,30 @@ import Servant.API
 import Servant.Client
 
 type Username = Text
+type Repository = Text
 type UserAgent = Text
 
 data GitHubUser =
     GitHubUser {    login   :: Maybe Text,
                     name    :: Maybe Text,
-                    email   :: Maybe Text
-             } deriving (Generic, FromJSON, Show)
+                    email   :: Maybe Text}
+                    deriving (Generic, FromJSON, Show)
+
+data GitHubLanguage =
+    GitHubLanguage {   language   :: Text}
+                        deriving (Generic, FromJSON, Show)
 
 type GitHubAPI = "users" :> Header "user-agent" UserAgent 
                          :> Capture "username" Username  :> Get '[JSON] GitHubUser
-            :<|> "test2" :> Get '[JSON] Text
+
+            :<|> "repos" :> Header "user-agent" UserAgent 
+                         :> Capture "username" Username
+                         :> Capture "repo" Repository  :> Get '[JSON] GitHubLanguage
+                         
 gitHubAPI :: Proxy GitHubAPI
 gitHubAPI = Proxy
 
-testEndpoint :: Maybe UserAgent -> Username -> ClientM GitHubUser
-testEndpoint2 :: ClientM Text
+getUser :: Maybe UserAgent -> Username -> ClientM GitHubUser
+getRepoLanguage :: Maybe UserAgent -> Username -> Repository -> ClientM GitHubLanguage
 
-testEndpoint :<|> testEndpoint2 = client gitHubAPI
+getUser :<|> getRepoLanguage = client gitHubAPI
