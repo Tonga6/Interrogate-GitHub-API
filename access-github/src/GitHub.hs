@@ -29,7 +29,8 @@ type Commits = Text
 data GitHubUser =
     GitHubUser {    login   :: Maybe Text,
                     name    :: Maybe Text,
-                    email   :: Maybe Text}
+                    email   :: Maybe Text,
+                    public_repos :: Maybe Integer}
                     deriving (Generic, FromJSON, Show)
 
 data GitHubRepo =
