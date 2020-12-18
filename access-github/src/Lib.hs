@@ -1,7 +1,7 @@
+{-# LANGUAGE OverloadedStrings    #-}
 {-# LANGUAGE FlexibleContexts     #-}
 {-# LANGUAGE DataKinds            #-}
 {-# LANGUAGE FlexibleInstances    #-}
-{-# LANGUAGE OverloadedStrings    #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE DuplicateRecordFields     #-}
 
@@ -19,25 +19,38 @@ import Data.List (intercalate)
 someFunc :: IO ()
 someFunc = do
     putStrLn "Executing getUserInfo:"
-    getUserInfo
-    putStrLn "Executing getRepoLanguage:"
-    -- getRepoLanguage
+    getUserInfo "Tonga6"
 
-getUserInfo :: IO ()
-getUserInfo  = 
-  (SC.runClientM (GH.getUser (Just "haskell-app") "Tonga6") =<< env) >>= \case
+getUserInfo :: Text -> IO ()
+getUserInfo name = 
+  (SC.runClientM (GH.getUser (Just "haskell-app") name) =<< env) >>= \case
 
     Left err -> do
       putStrLn $ "Error encountered: " ++ show err
     Right res -> do
       putStrLn $ "Returned val: " ++ show res
 
-      (SC.runClientM (GH.getRepoLanguage (Just "haskell-app") "Tonga6" "College") =<< env) >>= \case
-
+      -- now lets get the users repositories
+      (SC.runClientM (GH.getUserRepos (Just "haskell-app") name) =<< env) >>= \case
         Left err -> do
           putStrLn $ "Error encountered: " ++ show err
         Right res -> do
-          putStrLn $ "Returned val: " ++ show res
+          putStrLn $ "User's Public Repositories Are:" ++
+            intercalate ", " (map (\(GH.GitHubRepo n ) -> unpack n) res)
+
+          (SC.runClientM (GH.getRepoLanguage (Just "haskell-app") name "College") =<< env) >>= \case
+
+            Left err -> do
+              putStrLn $ "Error encountered: " ++ show err
+            Right res -> do
+              putStrLn $ "Returned val: " ++ show res
+
+              (SC.runClientM (GH.getRepoCommits (Just "haskell-app") name "College") =<< env) >>= \case
+
+                Left err -> do
+                  putStrLn $ "Error encountered: " ++ show err
+                Right res -> do
+                  putStrLn $ "Returned val: " ++ show res    
 
 
   where env :: IO SC.ClientEnv
